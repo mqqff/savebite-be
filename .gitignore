@@ -22,4 +22,5 @@ go.work
 
 # env
 .env
-*.log
+./logs
+tmp/

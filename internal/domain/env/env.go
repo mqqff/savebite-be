@@ -12,6 +12,8 @@ type Env struct {
 	AppPort string `mapstructure:"APP_PORT"`
 	AppEnv  string `mapstructure:"APP_ENV"`
 
+	APIKey string `mapstructure:"API_KEY"`
+
 	DBName string `mapstructure:"DB_NAME"`
 	DBHost string `mapstructure:"DB_HOST"`
 	DBPort string `mapstructure:"DB_PORT"`
