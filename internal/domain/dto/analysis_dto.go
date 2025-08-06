@@ -18,5 +18,6 @@ type AnalysisResponse struct {
 	UsableIngredients   []string `json:"usable_ingredients"`
 	UnusableIngredients []string `json:"unusable_ingredients"`
 	Feedback            string   `json:"feedback"`
+	ImageURL            string   `json:"image_url"`
 	CreatedAt           string   `json:"created_at,omitempty"`
 }

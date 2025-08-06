@@ -172,6 +172,7 @@ func (u *AnalysisUsecase) GetHistory(userID uuid.UUID, pagination dto.Pagination
 			UsableIngredients:   usableIngredients,
 			UnusableIngredients: unusableIngredients,
 			Feedback:            analysis.Feedback,
+			ImageURL:            analysis.ImageURL,
 			CreatedAt:           analysis.CreatedAt.String(),
 		})
 	}
