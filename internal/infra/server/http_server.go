@@ -86,7 +86,7 @@ func (s *HTTPServer) MountMiddlewares() {
 	s.app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
 		AllowMethods: "GET,POST,PUT,PATCH,DELETE",
-		AllowHeaders: "Content-Type,Authorization",
+		AllowHeaders: "Content-Type,Authorization,X-API-KEY",
 	}))
 
 	s.app.Use(helmet.New())
