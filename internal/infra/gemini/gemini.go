@@ -8,7 +8,7 @@ import (
 	"google.golang.org/genai"
 )
 
-type GeminiReponse struct {
+type GeminiResponse struct {
 	DetectedItems       []string `json:"detected_items"`
 	UsableIngredients   []string `json:"usable_ingredients"`
 	UnusableIngredients []string `json:"unusable_ingredients"`
@@ -16,7 +16,7 @@ type GeminiReponse struct {
 }
 
 type GeminiItf interface {
-	AnalyzeImage(mimeType string, image []byte) (GeminiReponse, error)
+	AnalyzeImage(mimeType string, image []byte) (GeminiResponse, error)
 }
 
 type GeminiStruct struct {
@@ -38,7 +38,7 @@ func getGemini() GeminiItf {
 	return &GeminiStruct{client}
 }
 
-func (g *GeminiStruct) AnalyzeImage(mimeType string, image []byte) (GeminiReponse, error) {
+func (g *GeminiStruct) AnalyzeImage(mimeType string, image []byte) (GeminiResponse, error) {
 	prompt := `
 You are a highly specialized assistant for food safety, culinary reuse, and sustainable waste management.
 
@@ -134,16 +134,16 @@ IMPORTANT RULES
 		log.Error(log.LogInfo{
 			"error": err.Error(),
 		}, "[Gemini][AnalyzeImage] failed to generate content from gemini")
-		return GeminiReponse{}, err
+		return GeminiResponse{}, err
 	}
 
-	geminiRes := GeminiReponse{}
+	geminiRes := GeminiResponse{}
 	err = sonic.Unmarshal([]byte(result.Text()), &geminiRes)
 	if err != nil {
 		log.Error(log.LogInfo{
 			"error": err.Error(),
 		}, "[Gemini][AnalyzeImage] failed to unmarshal json response")
-		return GeminiReponse{}, err
+		return GeminiResponse{}, err
 	}
 
 	return geminiRes, nil
