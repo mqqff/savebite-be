@@ -22,6 +22,6 @@ go.work
 
 # env
 .env
-./logs
+./data/logs
 tmp/
 .idea/
