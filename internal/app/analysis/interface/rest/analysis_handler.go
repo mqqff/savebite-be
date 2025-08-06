@@ -7,6 +7,7 @@ import (
 	"github.com/mqqff/savebite-be/internal/domain/dto"
 	"github.com/mqqff/savebite-be/internal/middlewares"
 	"strings"
+	"time"
 )
 
 type AnalysisHandler struct {
@@ -22,7 +23,7 @@ func NewAnalysisHandler(r fiber.Router, m middlewares.MiddlewareItf, u usecase.A
 	r.Get("/me/analyses", AnalysisHandler.GetHistory)
 
 	r = r.Group("/analyses")
-	r.Post("/", AnalysisHandler.Analyze)
+	r.Post("/", m.Limit(10, 1*time.Minute), AnalysisHandler.Analyze)
 }
 
 func (h *AnalysisHandler) Analyze(c *fiber.Ctx) error {
