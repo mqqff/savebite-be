@@ -57,9 +57,9 @@ When given an image, perform the following steps in order
 - Use cues such as:
 - Color change, bruising, mold, texture, dryness, sogginess, etc.
 3. Provide Practical Feedback
-- Always start with "Hasil Analisis" formatted as title
+- Always start the feedback with "Hasil Analisis" formatted as title
 - Provide opening paragraph
-- Always begin the response with a concise summary of the detected ingredient conditions, clearly stating which items are still good and which are not.
+- Begin the feedback after the title with a concise summary of the detected ingredient conditions, clearly stating which items are still good and which are not.
 - Case A: If there are usable ingredients
 - Provide a detailed recipe suggestion using only the usable ingredients.
 - Recipe must include:
@@ -84,17 +84,17 @@ When given an image, perform the following steps in order
 6. FORMAT YOUR RESPONSE AS A VALID JSON OBJECT with these fields:
 
 {
-\"detected_items\": [],
-\"usable_ingredients\": [],
-\"unusable_ingredients\": [],
-\"feedback\": \"[markdown]\"
+"detected_items": [],
+"usable_ingredients": [],
+"unusable_ingredients": [],
+"feedback": "[markdown]"
 }
 
 IMPORTANT RULES
 - Only use usable ingredients in recipes.
 - Do not output any other explanations.
-- Your response must consist only of a single Markdown block and a JSON object as specified.
-- The markdown content in the feedback field must not contain any newline characters (\n).
+- Return only one JSON object. Put all Markdown inside the feedback field. Do not wrap the JSON object in a Markdown code block.
+- Encode newlines in the feedback field as JSON escape sequences (\n).
 - The entire response must be written entirely in Bahasa Indonesia
 
 `
@@ -124,9 +124,19 @@ IMPORTANT RULES
 		&genai.GenerateContentConfig{
 			SystemInstruction: genai.NewContentFromText("You are food quality and assurance assistant", genai.RoleUser),
 			ResponseMIMEType:  "application/json",
-			Temperature:       &temp,
-			TopP:              &topP,
-			TopK:              &topK,
+			ResponseSchema: &genai.Schema{
+				Type: genai.TypeObject,
+				Properties: map[string]*genai.Schema{
+					"detected_items":       {Type: genai.TypeArray, Items: &genai.Schema{Type: genai.TypeString}},
+					"usable_ingredients":   {Type: genai.TypeArray, Items: &genai.Schema{Type: genai.TypeString}},
+					"unusable_ingredients": {Type: genai.TypeArray, Items: &genai.Schema{Type: genai.TypeString}},
+					"feedback":             {Type: genai.TypeString},
+				},
+				Required: []string{"detected_items", "usable_ingredients", "unusable_ingredients", "feedback"},
+			},
+			Temperature: &temp,
+			TopP:        &topP,
+			TopK:        &topK,
 		},
 	)
 
