@@ -1,15 +1,12 @@
 package server
 
 import (
-	"crypto/sha256"
-	"crypto/subtle"
 	"github.com/bytedance/sonic"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
-	"github.com/gofiber/fiber/v2/middleware/keyauth"
 	Analysishandler "github.com/mqqff/savebite-be/internal/app/analysis/interface/rest"
 	AnalysisRepo "github.com/mqqff/savebite-be/internal/app/analysis/repository"
 	AnalysisUsecase "github.com/mqqff/savebite-be/internal/app/analysis/usecase"
@@ -68,17 +65,6 @@ func (s *HTTPServer) Start(socket string) {
 			"error": err.Error(),
 		}, "[HTTPServer][Start] failed to start server")
 	}
-}
-
-func validateAPIKey(c *fiber.Ctx, key string) (bool, error) {
-	hashedAPIKey := sha256.Sum256([]byte(env.AppEnv.APIKey))
-	hashedKey := sha256.Sum256([]byte(key))
-
-	if subtle.ConstantTimeCompare(hashedAPIKey[:], hashedKey[:]) == 1 {
-		return true, nil
-	}
-
-	return false, keyauth.ErrMissingOrMalformedAPIKey
 }
 
 func (s *HTTPServer) MountMiddlewares() {
